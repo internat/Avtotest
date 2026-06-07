@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АвтоМастер — Автосервис в вашем городе</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --bg-card: #1e1e1e;
+            --bg-section: #181818;
+            --text: #e0e0e0;
+            --text-light: #b0b0b0;
+            --accent: #e63946;
+            --accent-hover: #c72d3a;
+            --accent-glow: rgba(230, 57, 70, 0.25);
+            --gold: #f4a261;
+            --border: #2a2a2a;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0 2rem;
+            transition: var(--transition);
+        }
+        .navbar.scrolled {
+            background: rgba(18, 18, 18, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .nav-inner {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #fff;
+            text-decoration: none;
+        }
+        .logo svg {
+            width: 38px;
+            height: 38px;
+        }
+        .logo .accent-dot {
+            color: var(--accent);
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            position: relative;
+            padding: 6px 0;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: var(--transition);
+        }
+        .nav-links a:hover {
+            color: #fff;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        .btn-nav {
+            background: var(--accent);
+            color: #fff !important;
+            padding: 10px 22px !important;
+            border-radius: 30px;
+            font-weight: 600 !important;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .btn-nav:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 0 25px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+        .btn-nav::after {
+            display: none !important;
+        }
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px;
+            z-index: 1001;
+        }
+        .burger span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: #fff;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        /* ========== HERO ========== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 120px 2rem 80px;
+            background: radial-gradient(ellipse at 70% 50%, rgba(230, 57, 70, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 30% 80%, rgba(244, 162, 97, 0.06) 0%, transparent 50%),
+                var(--bg-dark);
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1300px;
+            width: 100%;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        .hero-text h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+        .hero-text h1 .highlight {
+            color: var(--accent);
+            position: relative;
+        }
+        .hero-text p {
+            font-size: 1.15rem;
+            color: var(--text-light);
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+            line-height: 1.7;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px var(--accent-glow);
+        }
+        .btn-outline {
+            background: transparent;
+            color: #fff;
+            border: 2px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-3px);
+        }
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        .hero-car-svg {
+            width: 100%;
+            max-width: 550px;
+            height: auto;
+            filter: drop-shadow(0 20px 60px rgba(230, 57, 70, 0.3));
+        }
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        .hero-stat {
+            text-align: center;
+        }
+        .hero-stat .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1;
+        }
+        .hero-stat .label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* ========== SECTIONS ========== */
+        section {
+            padding: 100px 2rem;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-header .subtitle {
+            display: inline-block;
+            background: rgba(230, 57, 70, 0.15);
+            color: var(--accent);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .section-header h2 {
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        .section-header p {
+            color: var(--text-light);
+            margin-top: 12px;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* ========== SERVICES ========== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
+        }
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 36px 28px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow);
+        }
+        .service-card .icon-wrap {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: rgba(230, 57, 70, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+        .service-card:hover .icon-wrap {
+            background: var(--accent);
+        }
+        .service-card:hover .icon-wrap svg {
+            fill: #fff;
+        }
+        .service-card .icon-wrap svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--accent);
+            transition: var(--transition);
+        }
+        .service-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        .service-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        .service-card .price-tag {
+            display: inline-block;
+            margin-top: 16px;
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        /* ========== ADVANTAGES ========== */
+        .advantages {
+            background: var(--bg-section);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 30px;
+        }
+        .adv-card {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .adv-card .adv-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .adv-card:hover .adv-icon {
+            background: var(--accent);
+            transform: scale(1.1);
+        }
+        .adv-card .adv-icon svg {
+            width: 34px;
+            height: 34px;
+            fill: var(--accent);
+            transition: var(--transition);
+        }
+        .adv-card:hover .adv-icon svg {
+            fill: #fff;
+        }
+        .adv-card h3 {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .adv-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* ========== PROMO ========== */
+        .promo-banner {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1215 100%);
+            border: 1px solid rgba(230, 57, 70, 0.3);
+            border-radius: var(--radius);
+            padding: 50px 40px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .promo-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(230, 57, 70, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .promo-text h2 {
+            font-size: 2rem;
+            color: #fff;
+            font-weight: 700;
+        }
+        .promo-text .discount {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1;
+        }
+        .promo-text p {
+            color: var(--text-light);
+            margin-top: 8px;
+        }
+        .promo-btn {
+            z-index: 1;
+        }
+
+        /* ========== CONTACT / FORM ========== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        .contact-info h2 {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+        .contact-info p {
+            color: var(--text-light);
+            margin-bottom: 24px;
+        }
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+        .contact-detail svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--accent);
+            flex-shrink: 0;
+        }
+        .contact-detail span {
+            color: var(--text);
+            font-weight: 500;
+        }
+        .contact-form {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 36px 30px;
+        }
+        .contact-form h3 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: #111;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: var(--transition);
+            outline: none;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.05rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        .btn-submit:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 10px 25px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            background: #0a0a0a;
+            border-top: 1px solid var(--border);
+            padding: 40px 2rem;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* ========== MOBILE ========== */
+        @media (max-width: 900px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+            .hero-text p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .hero-stats {
+                justify-content: center;
+            }
+            .hero-image {
+                order: -1;
+            }
+            .hero-car-svg {
+                max-width: 300px;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: #1a1a1a;
+                flex-direction: column;
+                padding: 100px 30px 40px;
+                gap: 1.5rem;
+                transition: var(--transition);
+                border-left: 1px solid var(--border);
+                z-index: 999;
+            }
+            .nav-links.active {
+                right: 0;
+            }
+            .burger {
+                display: flex;
+            }
+            .promo-banner {
+                text-align: center;
+                justify-content: center;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="logo">
+                <!-- SVG логотип: щит с гаечным ключом -->
+                <svg viewBox="0 0 50 50" fill="none">
+                    <path d="M25 2L45 10V22C45 36 34 47 25 50C16 47 5 36 5 22V10L25 2Z" fill="#e63946"/>
+                    <rect x="20" y="16" width="10" height="18" rx="2" fill="#fff"/>
+                    <circle cx="22" cy="20" r="1.5" fill="#e63946"/>
+                    <circle cx="28" cy="20" r="1.5" fill="#e63946"/>
+                    <circle cx="22" cy="27" r="1.5" fill="#e63946"/>
+                    <circle cx="28" cy="27" r="1.5" fill="#e63946"/>
+                </svg>
+                Авто<span class="accent-dot">Мастер</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#services">Услуги</a></li>
+                <li><a href="#advantages">Преимущества</a></li>
+                <li><a href="#promo">Акции</a></li>
+                <li><a href="#contact">Контакты</a></li>
+                <li><a href="#contact" class="btn-nav">Записаться</a></li>
+            </ul>
+            <button class="burger" id="burger" aria-label="Меню">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" id="hero">
+        <div class="hero-grid">
+            <div class="hero-text">
+                <h1>Профессиональный <span class="highlight">ремонт</span> автомобилей</h1>
+                <p>Диагностика, ремонт и обслуживание любых марок. Честные цены, опытные мастера, гарантия на все работы.</p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        Записаться онлайн
+                    </a>
+                    <a href="#services" class="btn btn-outline">Наши услуги</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat"><div class="number">12+</div><div class="label">лет опыта</div></div>
+                    <div class="hero-stat"><div class="number">5000+</div><div class="label">клиентов</div></div>
+                    <div class="hero-stat"><div class="number">100%</div><div class="label">гарантия</div></div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <!-- SVG автомобиль для главного экрана -->
+                <svg class="hero-car-svg" viewBox="0 0 500 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="carGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#e63946"/>
+                            <stop offset="100%" stop-color="#c72d3a"/>
+                        </linearGradient>
+                        <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                    </defs>
+                    <!-- Тень -->
+                    <ellipse cx="250" cy="260" rx="160" ry="12" fill="rgba(0,0,0,0.5)"/>
+                    <!-- Кузов -->
+                    <path d="M70 180 L60 140 L100 100 L200 85 L300 85 L400 100 L440 140 L430 180 Z" fill="url(#carGrad)" filter="url(#glow)"/>
+                    <!-- Крыша -->
+                    <path d="M140 85 L160 45 L240 30 L300 30 L370 45 L380 85" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+                    <!-- Окна -->
+                    <path d="M155 82 L172 50 L235 38 L290 38 L362 50 L375 82" fill="rgba(150,200,255,0.5)" stroke="#444" stroke-width="2"/>
+                    <line x1="240" y1="38" x2="240" y2="82" stroke="#444" stroke-width="2"/>
+                    <!-- Фары -->
+                    <ellipse cx="85" cy="150" rx="14" ry="10" fill="#fff9c4" filter="url(#glow)"/>
+                    <ellipse cx="415" cy="150" rx="10" ry="7" fill="#ff5252" filter="url(#glow)"/>
+                    <!-- Колёса -->
+                    <circle cx="130" cy="195" r="38" fill="#1a1a1a" stroke="#333" stroke-width="4"/>
+                    <circle cx="130" cy="195" r="20" fill="#444"/>
+                    <circle cx="130" cy="195" r="8" fill="#888"/>
+                    <circle cx="370" cy="195" r="38" fill="#1a1a1a" stroke="#333" stroke-width="4"/>
+                    <circle cx="370" cy="195" r="20" fill="#444"/>
+                    <circle cx="370" cy="195" r="8" fill="#888"/>
+                    <!-- Бампер -->
+                    <path d="M55 170 L60 200 L440 200 L445 170" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+                    <!-- Детали -->
+                    <rect x="200" y="90" width="100" height="6" rx="3" fill="#333"/>
+                    <circle cx="250" cy="93" r="3" fill="#e63946"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SERVICES ==================== -->
+    <section id="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="subtitle">Что мы делаем</span>
+                <h2>Наши услуги</h2>
+                <p>Полный спектр работ по диагностике, ремонту и обслуживанию вашего автомобиля</p>
+            </div>
+            <div class="services-grid">
+                <!-- Карточка 1: Диагностика -->
+                <div class="service-card">
+                    <div class="icon-wrap">
+                        <svg viewBox="0 0 24 24"><path d="M4 2v20h16V2H4zm14 18H6V4h12v16zM8 6h8v2H8V6zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/><circle cx="17" cy="17" r="2.5"/></svg>
+                    </div>
+                    <h3>Компьютерная диагностика</h3>
+                    <p>Считывание ошибок, проверка всех систем автомобиля современным оборудованием.</p>
+                    <span class="price-tag">от 1 500 ₽</span>
+                </div>
+                <!-- Карточка 2: Двигатель -->
+                <div class="service-card">
+                    <div class="icon-wrap">
+                        <svg viewBox="0 0 24 24"><path d="M8 4v2H6v2H4v4h2v2h2v2h2v2h4v-2h2v-2h2v-2h2V8h-2V6h-2V4H8zm2 2h4v2h2v2h2v2h-2v2h-2v2h-4v-2H8v-2H6v-2h2V8h2V6z"/><rect x="10" y="8" width="4" height="6" rx="1"/></svg>
+                    </div>
+                    <h3>Ремонт двигателя</h3>
+                    <p>Капитальный и текущий ремонт ДВС любой сложности с гарантией.</p>
+                    <span class="price-tag">от 8 000 ₽</span>
+                </div>
+                <!-- Карточка 3: Ходовая -->
+                <div class="service-card">
+                    <div class="icon-wrap">
+                        <svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 14h12l2-6H4l2 6z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </div>
+                    <h3>Ходовая часть</h3>
+                    <p>Ремонт подвески, замена амортизаторов, рычагов, сайлентблоков.</p>
+                    <span class="price-tag">от 3 500 ₽</span>
+                </div>
+                <!-- Карточка 4: Тормоза -->
+                <div class="service-card">
+                    <div class="icon-wrap">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2"/></svg>
+                    </div>
+                    <h3>Тормозная система</h3>
+                    <p>Замена колодок, дисков, прокачка тормозов, ремонт суппортов.</p>
+                    <span class="price-tag">от 2 000 ₽</span>
+                </div>
+                <!-- Карточка 5: Кондиционер -->
+                <div class="service-card">
+                    <div class="icon-wrap">
+                        <svg viewBox="0 0 24 24"><path d="M12 2L8 8l-4-2v12l4-2 4 6 4-6 4 2V6l-4 2-4-6z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <h3>Автокондиционеры</h3>
+                    <p>Заправка фреоном, диагностика и ремонт систем кондиционирования.</p>
+                    <span class="price-tag">от 2 500 ₽</span>
+                </div>
+                <!-- Карточка 6: Масло -->
+                <div class="service-card">
+                    <div class="icon-wrap">
+                        <svg viewBox="0 0 24 24"><path d="M10 2v4h4V2h-4zM8 8l-4 8v4h16v-4l-4-8H8zm2 4h4v2h-4v-2z"/></svg>
+                    </div>
+                    <h3>Замена масла</h3>
+                    <p>Быстрая замена масла и фильтров с подбором по марке автомобиля.</p>
+                    <span class="price-tag">от 800 ₽</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ADVANTAGES ==================== -->
+    <section class="advantages" id="advantages">
+        <div class="container">
+            <div class="section-header">
+                <span class="subtitle">Почему выбирают нас</span>
+                <h2>Наши преимущества</h2>
+            </div>
+            <div class="advantages-grid">
+                <div class="adv-card">
+                    <div class="adv-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5L12 2z"/></svg>
+                    </div>
+                    <h3>Опытные мастера</h3>
+                    <p>Сертифицированные специалисты с опытом от 5 лет</p>
+                </div>
+                <div class="adv-card">
+                    <div class="adv-icon">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h4v4H7v-4z"/><circle cx="17" cy="12" r="1.5"/></svg>
+                    </div>
+                    <h3>Современное оборудование</h3>
+                    <p>Используем профессиональные инструменты и стенды</p>
+                </div>
+                <div class="adv-card">
+                    <div class="adv-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-4-4 1.4-1.4L10 14.2l6.6-6.6L18 9l-8 8z"/></svg>
+                    </div>
+                    <h3>Гарантия 12 месяцев</h3>
+                    <p>Даём гарантию на все выполненные работы и запчасти</p>
+                </div>
+                <div class="adv-card">
+                    <div class="adv-icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                    </div>
+                    <h3>Работаем быстро</h3>
+                    <p>Ценим ваше время — срочный ремонт без потери качества</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PROMO ==================== -->
+    <section id="promo">
+        <div class="container">
+            <div class="promo-banner">
+                <div class="promo-text">
+                    <h2>Специальное предложение</h2>
+                    <div class="discount">-25%</div>
+                    <p>На комплексную диагностику при первом обращении.<br>Акция действует до конца месяца.</p>
+                </div>
+                <div class="promo-btn">
+                    <a href="#contact" class="btn btn-primary" style="font-size:1.1rem; padding:16px 36px;">Получить скидку</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CONTACT ==================== -->
+    <section id="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2>Свяжитесь с нами</h2>
+                    <p>Оставьте заявку или позвоните — мы подберём удобное время для визита.</p>
+                    <div class="contact-detail">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5 2.5 1.1 2.5 2.5-1.1 2.5-2.5 2.5z"/></svg>
+                        <span>г. Москва, ул. Автомобильная, д. 15</span>
+                    </div>
+                    <div class="contact-detail">
+                        <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.7 3.4 4.5 6.2 7.9 7.9l2.6-2.6c.3-.3.7-.4 1.1-.3 1.2.4 2.5.6 3.8.6.6 0 1 .4 1 1v3.8c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1H10c.6 0 1 .4 1 1 0 1.3.2 2.6.6 3.8.1.4 0 .8-.3 1.1l-2.7 2.7z"/></svg>
+                        <span>+7 (999) 123-45-67</span>
+                    </div>
+                    <div class="contact-detail">
+                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        <span>info@automaster.ru</span>
+                    </div>
+                </div>
+                <div class="contact-form" id="form">
+                    <h3>Запись на сервис</h3>
+                    <form onsubmit="event.preventDefault(); alert('Спасибо! Мы свяжемся с вами в ближайшее время.'); this.reset();">
+                        <div class="form-row">
+                            <div class="form-group"><input type="text" placeholder="Ваше имя" required></div>
+                            <div class="form-group"><input type="tel" placeholder="Телефон" required></div>
+                        </div>
+                        <div class="form-group"><input type="text" placeholder="Марка и модель авто" required></div>
+                        <div class="form-group">
+                            <select required>
+                                <option value="" disabled selected>Выберите услугу</option>
+                                <option>Диагностика</option>
+                                <option>Ремонт двигателя</option>
+                                <option>Ходовая часть</option>
+                                <option>Тормозная система</option>
+                                <option>Автокондиционер</option>
+                                <option>Замена масла</option>
+                                <option>Другое</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><textarea placeholder="Комментарий (необязательно)"></textarea></div>
+                        <button type="submit" class="btn-submit">Отправить заявку</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer>
+        <p>© 2026 <a href="#">АвтоМастер</a>. Все права защищены. Работаем ежедневно с 9:00 до 21:00.</p>
+    </footer>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+        });
+
+        // Burger menu
+        const burger = document.getElementById('burger');
+        const navLinks = document.getElementById('navLinks');
+        burger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        // Close menu on link click
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
